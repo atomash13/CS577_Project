@@ -1,2 +1,3 @@
 # CS577_Project
-CS577 Project Report
+Fall 2023-CS577 Project Report
+Team members (Ana, Shorouq and Norah)
