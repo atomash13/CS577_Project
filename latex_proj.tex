@@ -1,0 +1,447 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{wrapfig} % For text wrapping around figures
+
+
+\begin{document}
+
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{image12.png}
+\end{figure}
+
+\title{DeepFake Detection}
+\author{Ana Tomash\\
+Shorouq Alasbali\\
+Norah Alamri}
+
+
+\maketitle
+
+
+\section{Introduction}
+\subsection{Problem description}
+Deepfake technology has emerged as a groundbreaking project in artificial intelligence, enabling the synthesis of hyper-realistic, computer-generated audio and video content that can convincingly mimic real human expressions and voices. While deepfakes can be used for harmless purposes, such as entertainment or parody, they can also be used for malicious purposes, such as spreading misinformation or damaging someone's reputation. As deepfake technology continues to improve, it is becoming increasingly difficult to distinguish between real and fake videos.
+
+
+\subsection{Project Goal }
+This project aims to develop and apply deep-learning techniques to effectively detect deepfake videos. The model will be trained on a dataset of real and fake videos, and evaluated on its ability to distinguish between the two accurately.
+
+
+
+\section{Literature Review }
+Deepfake technology uses sophisticated deep-learning algorithms, particularly generative adversarial networks (GANs) and deep neural networks (DNNs), to generate convincingly realistic synthetic content, such as images and videos. These algorithms are well-known for their capacity to mimic human features, expressions, and voices with astonishing accuracy.
+
+Moreover, there are some of the key techniques employed in the "FakeDeep" project:
+Deepfake Detection Algorithms: These algorithms are designed to identify deepfake content within multimedia, such as images, videos, and audio recordings. Common approaches include:
+
+\begin{itemize}
+    \item Convolutional Neural Networks (CNNs): Utilized for image and video analysis, CNNs can learn patterns and anomalies in visual data that may indicate deepfake manipulation.[3]
+  
+    \item Recurrent Neural Networks (RNNs): Applied to analyze sequential data, RNNs are useful for detecting manipulated audio or video sequences.[4]
+
+    \item Capsule Networks: These networks can capture hierarchical relationships in data, which can be beneficial for recognizing inconsistencies in deepfake content.[5]
+\end{itemize}
+
+
+
+\section{Data Description}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 1.png}
+    \caption{Sample images of pristine and manipulated images from the dataset}
+    \label{fig:enter-label}
+\end{figure}
+In this study, we utilized the FaceForensics++ dataset, specifically derived from FaceForensics-1600 videos after preprocessing. The FaceForensics++ dataset is curated for deepfake detection and encompasses genuine and manipulated facial videos. The dataset creation involved the implementation of various sophisticated techniques and tools.The manipulated sequences in the dataset were generated using four cutting-edge face manipulation techniques: Deepfakes, Faceswap, Face2Face, and NeuralTextures. These techniques were applied to produce manipulated sequences, resulting in different subsets within the dataset.
+
+The data utilized in this study has been obtained from the publicly available platform Kaggle[7]. The dataset captured the faces in both manipulated and real videos and converted them into 300x300-sized images. The individuals responsible for creating and curating this dataset are Farhan Sharukh Hasan (Owner) and Md. Rahat Kader Khan (Editor).
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 2.png}
+    \caption{FaceForensics++ preprocessing}
+    \label{fig:enter-label}
+\end{figure}
+
+\section{Dataset Split and Class Distribution}
+The dataset was divided into three distinct subsets for the purpose of experimentation:
+
+
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.5\linewidth]{pie.png}
+
+\end{wrapfigure}
+
+\begin{enumerate}
+    \item Test Set:
+    \begin{itemize}
+        \item Fake: 1541 images.
+        \item Real: 1562 images.
+    \end{itemize}
+    \item Training Set:
+    \begin{itemize}
+        \item Fake: 5835 images.
+        \item Real: 5613 images.
+    \end{itemize}
+    \item Validation Set:
+    \begin{itemize}
+        \item Fake: 629 images.
+        \item Real: 628 images.
+    \end{itemize}
+\end{enumerate}
+
+The dataset used in this study exhibits a well-balanced and evenly distributed composition across its various subsets. As shown in Figure 3, we can see that the test set has 49.7\% fake images and 50.3\% real images, demonstrating a near-equal representation of both classes. Similarly, the training set consists of 51\% fake images and 49\% real images, maintaining a balanced distribution between manipulated and genuine images. The validation set further reinforces this equilibrium with 50\% fake images and 50\% real images. This balanced distribution of fake and real images across the test, training, and validation sets ensures that the model is exposed to a diverse and representative range of data during the training and evaluation processes. Such balanced data distribution is crucial in machine learning tasks, as it prevents biases and enables the model to generalize well to unseen data, ultimately enhancing the reliability and accuracy of the deepfake detection system developed in this research project.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 3.png}
+    \caption{Class distribution of test, train, and validation sets. }
+    \label{fig:enter-label}
+\end{figure}
+
+\section{Model Training}
+\subsection{Utilizing CNN Models }
+We started with Convolutional Neural Networks (CNNs), which have proven to be highly effective in identifying deepfake content. CNNs are a class of deep learning models designed specifically for image and video analysis. Their ability to automatically learn features from images and hierarchically process them makes them a natural fit for the intricate task of deepfake detection.
+
+\textbf{Model Architecture:}
+
+\begin{itemize}
+    \item Convolutional Layers
+\end{itemize}
+The core of the model consists of convolutional layers, which are designed to scan and recognize local patterns within images. In our model, two sets of convolutional layers were used. The first set includes 32 filters with a size of (3, 3), followed by a second set with 64 filters of the same size. These layers apply filters to the input images, progressively learning and identifying features that are essential for the deep fake detection task.
+
+\begin{itemize}
+    \item Max-Pooling Layers
+\end{itemize}
+Max-pooling layers are interwoven with the convolutional layers. After each convolutional layer, max-pooling is applied with a pooling size of (2, 2). Max-pooling reduces the spatial dimensions of feature maps, preserving the most relevant information. This step is vital for improving computational efficiency and reducing overfitting.
+
+\begin{itemize}
+    \item Fully Connected Layers
+\end{itemize}
+After feature extraction through convolution and pooling, the flattened output is passed through fully connected layers. We have employed two dense layers in our model. The first dense layer consists of 128 units with the Rectified Linear Unit (ReLU) activation function. The second dense layer is the output layer, with the number of units corresponding to the number of classes in our binary classification problem (in this case, "fake" and "real"). The sigmoid activation function in the output layer provides probability scores for each class, enabling the model to make predictions.
+
+\begin{itemize}
+    \item Dropout Layer
+\end{itemize}
+In order to combat overfitting, a dropout layer with a rate of 0.5 was added after the first dense layer. Dropout randomly deactivates a fraction of the units during training, effectively reducing the model's reliance on any single feature and enhancing its generalization ability.
+
+\begin{itemize}
+    \item Training Results and Hyperparameter Tuning
+\end{itemize}
+In our pursuit of effective deepfake detection, we selected the Adam optimizer and the adjustment of the number of training epochs.
+
+\begin{itemize}
+    \item Optimization
+\end{itemize}
+The Adam optimizer is employed with a learning rate of 0.001, enhancing the training process's efficiency and convergence.
+
+\begin{itemize}
+    \item Loss Function
+\end{itemize}
+ The model uses binary cross-entropy as the loss function, suitable for binary classification problems such as deepfake detection.
+
+\begin{itemize}
+    \item Evaluation Metric
+\end{itemize}
+The model tracks accuracy as the evaluation metric, providing insights into its ability to correctly classify deep fake and authentic content.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 4.png}
+    \caption{CNN accuracy results for 10 epochs. }
+    \label{fig:enter-label}
+\end{figure}
+\textbf{Model Results}
+
+The Adam optimizer is renowned for its efficiency in optimizing deep learning models, and it played a pivotal role in enhancing our model's learning capabilities. When initially training our model with a modest 10 epochs, we achieved an accuracy rate of 61\%.
+Realizing that extending the training duration could potentially lead to better results, we embarked on a second training iteration, this time setting the number of epochs to 30. During this extended training period, they were allowed the model to undergo more iterations and update its internal parameters, improving performance.
+
+The outcome of your hyperparameter tuning was promising. By increasing the number of epochs from 10 to 30, our model's accuracy rose from 61\% to 71.41\%. This 10\% improvement signifies that the model continued to learn from the dataset, refining its ability to distinguish between authentic and deepfake content.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 5.png}
+    \caption{CNN accuracy results for 30 epochs}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Utilizing Transfer Learning Methods}
+
+Transfer learning is a powerful technique in deep learning where a pre-trained neural network, trained on a large dataset for a specific task, is adapted to a different but related task. When it comes to deepfake detection, transfer learning plays a crucial role in improving the accuracy and efficiency of models.
+
+\subsubsection{MobileNetV2}
+
+
+MobileNetV2 is a state-of-the-art deep learning architecture designed for efficient and lightweight neural networks, particularly suited for mobile devices and edge computing applications. It was introduced by Google researchers in their paper "MobileNetV2: Inverted Residuals and Linear Bottlenecks" in 2018. MobileNetV2 builds upon the success of the original MobileNet by incorporating novel techniques to improve accuracy and efficiency.
+\paragraph{}
+\textbf{Model Architecture:}
+
+Transfer learning using MobileNetV2 involves leveraging a pre-trained MobileNetV2 model as a feature extractor and adding custom layers on top to adapt the model for a specific task.
+
+
+\begin{itemize}
+    \item Base Model (MobileNetV2 as Feature Extractor):
+\end{itemize}
+The MobileNetV2 model is chosen as the base model. The pre-trained weights are loaded from the 'imagenet' dataset, and the top classification layers are excluded (include\_top=False).
+
+\begin{itemize}
+    \item Custom Classification Layers:
+    \begin{itemize}
+        \item Global average pooling is applied to the output of the base model.
+        \item A Dropout layer with a dropout rate of 0.5 is added for regularization.
+        \item A Dense layer with a single neuron and a sigmoid activation function is added for binary classification.
+    \end{itemize}
+\end{itemize}
+   
+\begin{itemize}
+    \item Create the Transfer Learning Model:
+\end{itemize}
+Create the final transfer learning model by specifying the inputs (images) and outputs (predictions).
+ 
+\begin{itemize}
+    \item Freeze Base Model Layers:
+\end{itemize}
+The layers of the MobileNetV2 base model are set to be non-trainable (layer.trainable = False) to retain the pre-trained weights during the initial training.
+
+\begin{itemize}
+    \item Compile the Model:
+\end{itemize}
+The model is compiled using the Adam optimizer with a learning rate of 0.0001, binary crossentropy loss function, and accuracy as the evaluation metric.  
+
+\begin{itemize}
+    \item Training and Fine-Tuning:
+\end{itemize}
+\begin{itemize}
+    \begin{itemize}
+        \item The model is trained using the fit\_generator method, which is deprecated but still functional in this code.
+
+        \item Training involves 50 epochs with 50 steps per epoch for training and 20 steps per epoch for validation.
+    \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+    \item Callbacks:
+\end{itemize}
+\begin{itemize}
+    \begin{itemize}
+        \item EarlyStopping is implemented to monitor the validation loss, and training is stopped if the loss does not improve after three consecutive epochs.
+        \item LearningRateScheduler is defined to adjust the learning rate during training.
+    \end{itemize}
+\end{itemize}
+\paragraph{}
+\textbf{Model Results }
+
+The model's performance is evaluated on the test dataset, and the results indicate that the model achieves a test accuracy of approximately 88.88\%. This accuracy represents the proportion of correctly classified instances out of the total test samples.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 6.png}
+    \caption{MobileNetV2 accuracy results for 50 epochs}
+    \label{fig:enter-label}
+\end{figure}
+\subsubsection{MesoNet Transfer Learning Model}
+
+MesoNet is a deep learning architecture designed for facial deep face detection. It utilizes convolutional layers to capture spatiotemporal features in images, making it effective for distinguishing between real and manipulated facial images.
+\paragraph{}
+\textbf{Model Architecture:}
+
+Base Model (Meso4 as Feature Extractor):
+\begin{itemize}
+    \item Implement Meso4 as the base model for feature extraction.
+    \item Pretrained weights are loaded to leverage knowledge from a related task.
+\end{itemize}
+Convolutional Layers:
+\begin{itemize}
+    \item Utilize convolutional layers with Batch Normalization, MaxPooling, and LeakyReLU activations.
+    \item Configure multiple convolutional blocks to capture hierarchical features.
+\end{itemize}
+Flatten and Dense Layers:
+\begin{itemize}
+    \item Flatten the output to a 1D tensor.
+    \item Apply dropout for regularization.
+    \item Add Dense layers with LeakyReLU activations for non-linearity.
+\end{itemize}
+Custom Output Layer:
+\begin{itemize}
+    \item Include a custom output layer with a sigmoid activation for binary classification (real or deep fake).
+\end{itemize}
+Transfer Learning Initialization:
+\begin{itemize}
+    \item Instantiate MesoNet and load pretrained weights ('Meso4\_DF').
+\end{itemize}
+
+\paragraph{}
+\textbf{Model Training and Results:}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 7.png}
+    \caption{MesoNet Tain/Validation accuracy results.}
+    \label{fig:enter-label}
+\end{figure}
+\begin{itemize}
+    \item Train the model on the training set using the fit method with freezing the pretrained layers during the initial training and the accuracy almost 63. Then unfreezing the weights for fine-tuning and the accuracy increased to 96.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 8.png}
+    \caption{MesoNet accuracy results for 15 epochs.}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsubsection{VGG16}
+VGG16, short for Visual Geometry Group 16-layer model, is a deep convolutional neural network architecture designed for image classification. It was introduced by the Visual Geometry Group at the University of Oxford and presented at the ILSVRC (ImageNet Large Scale Visual Recognition Challenge) in 2014. VGG16 is known for its simplicity and uniform architecture.
+\paragraph{}
+\textbf{VGG16 Architecture:}
+\begin{itemize}
+    \item We load the pre-trained VGG16 model with weights pre-trained on ImageNet. The top layer is excluded (include\_top=False), and we specify the input shape to match our data.
+    \item Freezing Layers:
+    \item We freeze the pre-trained layers of the VGG16 model to retain the learned features during training of the new classification layers.
+    \item New Model for Binary Classification:
+    \item We create a new model using the Sequential API, consisting of the pre-trained VGG16 model, a Flatten layer, a Dense layer with ReLU activation, and a final Dense layer with a sigmoid activation for binary classification.
+    \item Model Compilation:
+    \item The model is compiled using the Adam optimizer with a learning rate of 0.001, binary cross-entropy loss function, and accuracy as the metric.
+\end{itemize}
+\paragraph{}
+\textbf{	Model results:}
+Training with Frozen Layers:
+\begin{itemize}
+    \item When you initially train the model with the pre-trained layers frozen, the model learns to extract features from the images using the knowledge gained from the ImageNet dataset. The validation and test accuracies (around 75.34\% and 72.06\%, respectively) suggest that the model might be overfitting to the training data. It is not generalizing well to new data, indicating a need for further adjustment.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 9.png}
+    \caption{VGG16 Training with Frozen Layers}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 10.png}
+    \caption{Plot VGG16 Training with Frozen Layers}
+    \label{fig:enter-label}
+\end{figure}
+Unfreezing Last Layers:
+\begin{itemize}
+    \item Unfreezing the last 10 layers (fine-tuning) allows the model to adjust its weights based on our specific task. The hope is that the model can capture task-specific features and improve its ability to generalize.
+\end{itemize}
+Lower Learning Rate:
+\begin{itemize}
+    \item A lower learning rate (0.0001) is used during fine-tuning to prevent drastic changes to the pre-trained weights and to avoid overfitting.
+\end{itemize}
+Result after Fine-Tuning: The test accuracy after fine-tuning is approximately 49.66\%, which is close to random guessing (50\%). This suggests that the fine-tuning did not significantly improve the model's performance on the test set.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 11.png}
+    \caption{VGG16 Training with UnFrozen Layers}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\subsubsection{Xception}
+Xception (Extreme Inception) is a deep learning convolutional neural network (CNN) architecture that was introduced by François Chollet, the creator of the Keras deep learning library. It was proposed in the paper titled "Xception: Deep Learning with Depthwise Separable Convolutions," presented at the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) in 2017.
+
+Xception is inspired by the Inception architecture, which is known for its parallelized and multi-scale feature extraction using various filter sizes. Xception takes this idea further by replacing the standard convolutional layers in Inception with depthwise separable convolutions. Depthwise separable convolutions consist of a depthwise convolution (which operates on each channel independently) followed by a pointwise convolution (a 1x1 convolution). This separation reduces the computational cost significantly while maintaining expressive power.
+
+\paragraph{}
+\textbf{Model architecture:}
+
+Data Preprocessing:
+\begin{itemize}
+    \item ImageDataGenerator is used for data augmentation and preprocessing. Augmentation includes rescaling, shearing, zooming, and horizontal flipping.
+\end{itemize}
+Data Generators:
+\begin{itemize}
+    \item Separate generators are created for training, testing, and validation data using the specified data directories, target size, and batch size.
+    \item The classes are specified as ['fake', 'real'], and the class\_mode is set to 'binary'.
+\end{itemize}
+Xception Base Model:
+\begin{itemize}
+    \item The Xception model is loaded with pre-trained weights from ImageNet and excludes the top classification layers.
+    \item GlobalAveragePooling2D layer is added to reduce spatial dimensions.
+    \item A Dense layer with one unit and a sigmoid activation function is added for binary classification.
+\end{itemize}
+Freezing Base Model Layers:
+\begin{itemize}
+    \item The layers of the Xception base model are frozen to prevent them from being updated during training.
+\end{itemize}
+Model Compilation:
+\begin{itemize}
+    \item The model is compiled using the Adam optimizer with a learning rate of 0.0001, binary crossentropy loss function, and accuracy as the evaluation metric.
+\end{itemize}
+Training:
+\begin{itemize}
+    \item The model is trained with early stopping based on validation loss and a learning rate schedule defined by the lr\_schedule function.
+    \item The training process runs for 50 epochs, and the training and validation accuracy and loss are monitored.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 12.png}
+    \caption{Plot of Xception Train/Validation Accuracy with Early Stopping}
+    \label{fig:enter-label}
+\end{figure}
+
+\paragraph{}
+\textbf{Model Result:}
+
+\begin{itemize}
+    \item The training process shows a decreasing training loss and increasing training accuracy, indicating that the model is learning from the training data.
+    \item The validation loss and accuracy are also monitored, and early stopping is employed to prevent overfitting.
+    \item The test accuracy achieved is very high (99.94\%), suggesting that the model generalizes well to unseen data.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 13 .png}
+    \caption{Xception Test Accuracy}
+    \label{fig:enter-label}
+\end{figure}
+
+\section{Overall Results}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figure 14.png}
+    \caption{Test accuracies of all models done in this project}
+    \label{fig:enter-label}
+\end{figure}
+In this comparative analysis of different convolutional neural network (CNN) architectures for binary image classification, the Xception model demonstrated superior performance, achieving the best test accuracy of 99.94\%. This outcome highlights the efficacy of utilizing pre-trained models and transfer learning in image classification. MesoNet exhibited great performance, achieving a test accuracy of 96.88\%. The MobileNetV2 architecture yielded an accuracy of 88.88\%. In addition, VGG16 with frozen layers and a simpler CNN both demonstrated comparable accuracies at 72.00\% and 71.41\%, respectively. Notably, unfreezing VGG16 layers resulted in a significant decline in performance, underscoring the nuanced nature of fine-tuning. These insights contribute valuable information to the understanding of CNN architecture selection and configuration for image classification tasks, with Xception emerging as a robust choice.
+
+
+\section{Future Scope}
+For future improvement, this project envisions several additional steps to employ:
+\begin{itemize}
+    
+    \item Applying more regress data augmentation techniques to increase training accuracy.
+    \item Try convolutional neural networks (CNN) coupled with long short-term memory (LSTM) networks. These techniques can help us capture temporal dependencies within deep fake content, enhancing our ability to detect even more convincing forgeries.
+    \item Utilize Face ID to localize learning parameters on face structure and patterns only reducing noise and enhancing learning accuracy.
+\end{itemize}
+\newpage
+\bibliographystyle{alpha}
+\bibliography{sample}
+\begin{enumerate}
+    \item Rössler, Andreas, Davide Cozzolino, Luisa Verdoliva, Christian Riess, Justus Thies, and Matthias Nießner. "Face Forensics: A large-scale video dataset for forgery detection in human faces." arXiv preprint arXiv:1803.09179 (2018).
+    \item Hsu, Chih-Chung, Chia-Yen Lee, and Yi-Xiu Zhuang. "Learning to detect fake face images in the wild." In 2018 international symposium on computer, consumer and control (IS3C), pp. 388-391. IEEE, 2018.
+    \item Bonettini, Nicolo, Edoardo Daniele Cannas, Sara Mandelli, Luca Bondi, Paolo Bestagini, and Stefano Tubaro. "Video face manipulation detection through ensemble of cnns." In 2020 25th international conference on pattern recognition (ICPR), pp. 5012-5019. IEEE, 2021.
+    \item Güera, David, and Edward J. Delp. "Deepfake video detection using recurrent neural networks." In 2018 15th IEEE international conference on advanced video and signal based surveillance (AVSS), pp. 1-6. IEEE, 2018.
+    \item Nguyen, Huy H., Junichi Yamagishi, and Isao Echizen. "Capsule-forensics: Using capsule networks to detect forged images and videos." In ICASSP 2019-2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), pp. 2307-2311. IEEE, 2019.
+    \item Rana, Md Shohel, Mohammad Nur Nobi, Beddhu Murali, and Andrew H. Sung. "Deepfake detection: A systematic literature review." IEEE access 10 (2022): 25494-25513.
+    \item FaceForensics-1600 videos-preprocess. (2023). Retrieved October 30, 2023, \href{https://www.kaggle.com/datasets/farhansharukhhasan/faceforensics1600-videospreprocess/data?select=data.}{from Kaggle}
+    \item Chollet, F. (2017). Xception: Deep learning with depthwise separable convolutions. 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
+\end{enumerate}
+
+
+\end{document}
